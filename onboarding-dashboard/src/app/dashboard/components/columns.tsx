@@ -1,7 +1,7 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { EllipsisVertical } from "lucide-react";
+import { EllipsisVertical, Info, Pencil } from "lucide-react";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -10,6 +10,8 @@ import { useRouter } from "next/navigation";
 import { employeeSchema } from "./schema";
 import { Badge } from "@/components/ui/badge";
 import { DataTableColumnHeader } from "@/components/data-table/data-column-header";
+import { EmployeeDetailModal } from "./modals/employee-detail";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/data-table/dropdown-menu";
 
 export const dashboardColumns: ColumnDef<z.infer<typeof employeeSchema>>[] = [
   {
@@ -101,15 +103,25 @@ export const dashboardColumns: ColumnDef<z.infer<typeof employeeSchema>>[] = [
   id: "actions",
   cell: ({ row }) => {
     const employee = row.original;
-    const [isOpen, setIsOpen] = React.useState(false);
     const router = useRouter();
 
     return (
-      <>
-        <Button variant="ghost" size="icon" onClick={() => setIsOpen(true)}>
-          <EllipsisVertical />
-        </Button>
-      </>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" size="icon">
+            <EllipsisVertical />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuItem
+            onClick={() => router.push(`/dashboard/employees/${employee.id}?edit=true`)}
+            className="flex items-center gap-2"
+          >
+            <Info size={16} />
+            Info
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
     );
   },
   enableSorting: false,
