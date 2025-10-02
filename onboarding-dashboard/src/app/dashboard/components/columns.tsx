@@ -1,16 +1,14 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { EllipsisVertical, Info, Pencil } from "lucide-react";
+import { EllipsisVertical, Info } from "lucide-react";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import React from "react";
 import { useRouter } from "next/navigation";
 import { employeeSchema } from "./schema";
 import { Badge } from "@/components/ui/badge";
 import { DataTableColumnHeader } from "@/components/data-table/data-column-header";
-import { EmployeeDetailModal } from "./modals/employee-detail";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/data-table/dropdown-menu";
 
 export const dashboardColumns: ColumnDef<z.infer<typeof employeeSchema>>[] = [
@@ -38,7 +36,7 @@ export const dashboardColumns: ColumnDef<z.infer<typeof employeeSchema>>[] = [
       </div>
     ),
     enableSorting: false,
-    enableHiding: false,
+    enableHiding: false, // no ocultable
   },
   {
     accessorKey: "name",
@@ -51,7 +49,7 @@ export const dashboardColumns: ColumnDef<z.infer<typeof employeeSchema>>[] = [
       </div>
     ),
     enableSorting: false,
-    enableHiding: false,
+    enableHiding: true, // ahora sí aparece en toggle
   },
   {
     accessorKey: "surname",
@@ -62,70 +60,69 @@ export const dashboardColumns: ColumnDef<z.infer<typeof employeeSchema>>[] = [
       </Badge>
     ),
     enableSorting: false,
-    enableHiding: false,
+    enableHiding: true,
   },
   {
     accessorKey: "emailCorporative",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Email Corporativo" />,
     cell: ({ row }) => <span className="text-muted-foreground">{row.original.emailCorporative}</span>,
     enableSorting: false,
-    enableHiding: false,
+    enableHiding: true,
   },
   {
     accessorKey: "departament",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Departamento" />,
     cell: ({ row }) => <span className="text-muted-foreground">{row.original.departament ?? "N/A"}</span>,
     enableSorting: false,
-    enableHiding: false,
+    enableHiding: true,
   },
   {
     accessorKey: "dateOfAdmission",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Fecha de Ingreso" />,
     cell: ({ row }) => <span className="text-muted-foreground">{row.original.dateOfAdmission}</span>,
     enableSorting: false,
-    enableHiding: false,
+    enableHiding: true,
   },
   {
     accessorKey: "country",
     header: ({ column }) => <DataTableColumnHeader column={column} title="País" />,
     cell: ({ row }) => <span className="text-muted-foreground">{row.original.country}</span>,
     enableSorting: false,
-    enableHiding: false,
+    enableHiding: true,
   },
   {
     accessorKey: "salary",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Salario" />,
     cell: ({ row }) => <span className="text-muted-foreground">${row.original.salary}</span>,
     enableSorting: false,
-    enableHiding: false,
+    enableHiding: true,
   },
-{
-  id: "actions",
-  cell: ({ row }) => {
-    const employee = row.original;
-    const router = useRouter();
+  {
+    id: "actions",
+    cell: ({ row }) => {
+      const employee = row.original;
+      const router = useRouter();
 
-    return (
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="ghost" size="icon">
-            <EllipsisVertical />
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          <DropdownMenuItem
-            onClick={() => router.push(`/dashboard/employees/${employee.id}?edit=true`)}
-            className="flex items-center gap-2"
-          >
-            <Info size={16} />
-            Info
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    );
-  },
-  enableSorting: false,
-}
-
-
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="icon">
+              <EllipsisVertical />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem
+              onClick={() => router.push(`/dashboard/employees/${employee.id}?edit=true`)}
+              className="flex items-center gap-2"
+            >
+              <Info size={16} />
+              Info
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      );
+    },
+    enableSorting: false,
+    enableHiding: false, // no ocultable
+  }
 ];
