@@ -6,40 +6,33 @@ import { cn } from "@/lib/utils";
 import { getPreference } from "@/server/server-actions";
 import {
   SIDEBAR_VARIANT_VALUES,
-  SIDEBAR_COLLAPSIBLE_VALUES,
-  CONTENT_LAYOUT_VALUES,
   NAVBAR_STYLE_VALUES,
   type SidebarVariant,
-  type SidebarCollapsible,
-  type ContentLayout,
   type NavbarStyle,
 } from "@/types/layout";
 import { AppSidebar } from "./components/sidebar/app-sidebar";
 import { GlobalSearchDialog } from "./components/sidebar/search-dialog";
+import { LayoutControls } from "./components/sidebar/layout-controls";
+import { ThemeSwitcher } from "./components/sidebar/theme-switcher";
 
 export default async function Layout({ children }: Readonly<{ children: ReactNode }>) {
   const cookieStore = await cookies();
   const defaultOpen = cookieStore.get("sidebar_state")?.value === "true";
 
-  const [sidebarVariant, sidebarCollapsible, contentLayout, navbarStyle] = await Promise.all([
+  const [sidebarVariant, navbarStyle] = await Promise.all([
     getPreference<SidebarVariant>("sidebar_variant", SIDEBAR_VARIANT_VALUES, "inset"),
-    getPreference<SidebarCollapsible>("sidebar_collapsible", SIDEBAR_COLLAPSIBLE_VALUES, "icon"),
-    getPreference<ContentLayout>("content_layout", CONTENT_LAYOUT_VALUES, "centered"),
     getPreference<NavbarStyle>("navbar_style", NAVBAR_STYLE_VALUES, "scroll"),
   ]);
 
   const layoutPreferences = {
-    contentLayout,
     variant: sidebarVariant,
-    collapsible: sidebarCollapsible,
-    navbarStyle,
+    navbarStyle:  navbarStyle ?? "sticky",
   };
 
   return (
     <SidebarProvider defaultOpen={defaultOpen}>
-      <AppSidebar variant={sidebarVariant} collapsible={sidebarCollapsible} />
+      <AppSidebar variant={sidebarVariant} />
       <SidebarInset
-        data-content-layout={contentLayout}
         className={cn(
           "data-[content-layout=centered]:!mx-auto data-[content-layout=centered]:max-w-screen-2xl",
           // Adds right margin for inset sidebar in centered layout up to 113rem.
@@ -61,6 +54,8 @@ export default async function Layout({ children }: Readonly<{ children: ReactNod
               <GlobalSearchDialog />
             </div>
             <div className="flex items-center gap-2">
+              <LayoutControls {...layoutPreferences} />
+              <ThemeSwitcher />
             </div>
           </div>
         </header>
