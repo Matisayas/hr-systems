@@ -2,17 +2,9 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-
 import { PlusCircleIcon, MailIcon, ChevronRight } from "lucide-react";
-
 import { Button } from "@/components/ui/button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import {
   SidebarGroup,
   SidebarGroupLabel,

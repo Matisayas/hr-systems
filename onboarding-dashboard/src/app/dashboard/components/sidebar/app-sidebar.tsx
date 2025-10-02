@@ -1,8 +1,5 @@
 "use client";
 
-import Link from "next/link";
-
-import { Settings, CircleHelp, Search, Database, ClipboardList, File, Command } from "lucide-react";
 import { sidebarItems } from "@/navigation/sidebar/sidebar-items";
 import { NavMain } from "../nav-bar/nav-main";
 import { NavUser } from "../nav-bar/nav-user";
