@@ -26,24 +26,12 @@ export function DataTable({ data: initialData }: { data: Employee[] }) {
         <Label htmlFor="view-selector" className="sr-only">View</Label>
         <div className="flex items-center gap-2">
           <DataTableViewOptions table={table} />
-         
         </div>
       </div>
-
       <TabsContent value="outline" className="relative flex flex-col gap-4 overflow-auto">
         <div className="overflow-hidden rounded-lg border">
           <DataTableNew dndEnabled table={table} columns={columns} onReorder={setData} />
         </div>
-      </TabsContent>
-
-      <TabsContent value="past-performance" className="flex flex-col">
-        <div className="aspect-video w-full flex-1 rounded-lg border border-dashed"></div>
-      </TabsContent>
-      <TabsContent value="key-personnel" className="flex flex-col">
-        <div className="aspect-video w-full flex-1 rounded-lg border border-dashed"></div>
-      </TabsContent>
-      <TabsContent value="focus-documents" className="flex flex-col">
-        <div className="aspect-video w-full flex-1 rounded-lg border border-dashed"></div>
       </TabsContent>
     </Tabs>
   );
