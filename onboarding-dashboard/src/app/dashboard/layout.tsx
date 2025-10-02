@@ -1,7 +1,6 @@
 import { ReactNode } from "react";
 import { cookies } from "next/headers";
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { users } from "@/data/users";
 import { cn } from "@/lib/utils";
 import { getPreference } from "@/server/server-actions";
 import {
@@ -14,6 +13,10 @@ import { AppSidebar } from "./components/sidebar/app-sidebar";
 import { GlobalSearchDialog } from "./components/sidebar/search-dialog";
 import { LayoutControls } from "./components/sidebar/layout-controls";
 import { ThemeSwitcher } from "./components/sidebar/theme-switcher";
+import { AccountSwitcher } from "./components/sidebar/account-switcher";
+import { users } from "@/data/users";
+
+
 
 export default async function Layout({ children }: Readonly<{ children: ReactNode }>) {
   const cookieStore = await cookies();
@@ -30,7 +33,7 @@ export default async function Layout({ children }: Readonly<{ children: ReactNod
   };
 
   return (
-    <SidebarProvider defaultOpen={defaultOpen}>
+     <SidebarProvider defaultOpen={defaultOpen}>
       <AppSidebar variant={sidebarVariant} />
       <SidebarInset
         className={cn(
@@ -56,6 +59,7 @@ export default async function Layout({ children }: Readonly<{ children: ReactNod
             <div className="flex items-center gap-2">
               <LayoutControls {...layoutPreferences} />
               <ThemeSwitcher />
+              <AccountSwitcher users={users} />
             </div>
           </div>
         </header>
