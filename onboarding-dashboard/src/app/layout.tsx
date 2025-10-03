@@ -8,6 +8,8 @@ import { PreferencesStoreProvider } from "@/store/preferences/preferences-provid
 import { THEME_MODE_VALUES, THEME_PRESET_VALUES, type ThemePreset, type ThemeMode } from "@/types/theme";
 import { AuthProvider } from "@/components/auth/auth-provider";
 import "./globals.css";
+import { employees as initialEmployees } from "./dashboard/hooks/data-employee"; // ← ESTA LÍNEA CORREGIDA
+import { EmployeeProvider } from "@/contexts/employee-context";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -33,10 +35,12 @@ export default async function RootLayout({
     >
       <body className={`${inter.className} min-h-screen antialiased`}>
         <PreferencesStoreProvider themeMode={themeMode} themePreset={themePreset}>
-          <AuthProvider>
-            {children}
-            <Toaster />
-          </AuthProvider>
+           <EmployeeProvider initialData={initialEmployees}> {/* ← AHORA FUNCIONA */}
+              <AuthProvider>
+                {children}
+                <Toaster />
+              </AuthProvider>
+          </EmployeeProvider>
         </PreferencesStoreProvider>
       </body>
     </html>

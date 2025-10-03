@@ -13,18 +13,16 @@ import { Employee, employeeSchema } from "../schema";
 import { EmployeeForm } from "../form/employee-form";
 import { toast } from "sonner";
 
-// Importa o pasa los empleados existentes como prop
 type Props = {
   onSubmit: (employee: Employee) => void;
   children: React.ReactNode;
-  existingEmployees?: Employee[]; // Nueva prop para los empleados existentes
+  existingEmployees?: Employee[];
 };
 
 // Función para verificar si el email ya existe
 async function checkEmailExists(email: string, existingEmployees: Employee[]): Promise<boolean> {
   return new Promise((resolve) => {
     setTimeout(() => {
-      // Verifica contra la lista real de empleados
       const emailExists = existingEmployees.some((e) => 
         e.emailCorporative.toLowerCase() === email.toLowerCase()
       );
@@ -33,20 +31,19 @@ async function checkEmailExists(email: string, existingEmployees: Employee[]): P
   });
 }
 
-// Función mock para agregar empleado (solo para simulación)
 async function addEmployee(employee: Employee): Promise<Employee> {
   return new Promise((resolve) => {
     setTimeout(() => {
-      const newEmp = { 
+      const newEmp: Employee = { 
         ...employee, 
-        id: Date.now() 
+        id: employee.id || Date.now() 
       };
       resolve(newEmp);
     }, 800);
   });
 }
 
-const defaultValues: Partial<Employee> = {
+const defaultValues: Employee = { 
   name: "",
   surname: "",
   emailCorporative: "",
@@ -153,6 +150,7 @@ export function AddEmployeeModal({ onSubmit, children, existingEmployees = [] }:
           <EmployeeForm 
             isSubmitting={isSubmitting}
             onSubmit={handleFormSubmit}
+            existingEmployees={existingEmployees}
           />
         </FormProvider>
       </DialogContent>

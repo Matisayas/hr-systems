@@ -8,50 +8,39 @@ import { DataTable as DataTableNew } from "@/components/data-table/data-table";
 import { DataTablePagination } from "@/components/data-table/data-table-pagination";
 import { withDndColumn } from "@/components/data-table/table-utils";
 import { dashboardColumns } from "./columns";
-import { Employee, employeeSchema } from "./schema";
+import { Employee } from "./schema";
 import { AddEmployeeModal } from "./modals/create-employee";
 import { ToastContainer } from "react-toastify";
 import { useDataTableInstance } from "@/hooks/use-data-table-instance";
+import { useEmployees } from "@/contexts/employee-context";
 
-export function DataTable({ data: initialData }: { data: Employee[] }) {
-  const [data, setData] = React.useState<Employee[]>(() => initialData);
+export function DataTable() {
+  const { employees, addEmployee } = useEmployees();
+  
+
   const columns = withDndColumn(dashboardColumns);
   
   const table = useDataTableInstance({
-    data,
+    data: employees,
     columns,
-    getRowId: (row) => (row.id || Date.now() + Math.random()).toString()
+    getRowId: (row) => (row.id ? row.id.toString() : `temp-${row.name}-${row.emailCorporative}`)
   });
 
   const handleAddEmployee = (newEmployee: Employee) => {
-    setData(prev => [...prev, { ...newEmployee, id: newEmployee.id || Date.now() }]);
+    addEmployee(newEmployee);
   };
 
   return (
     <>
-      <ToastContainer
-        position="top-right"
-        autoClose={4000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-      />
+      <ToastContainer />
       
       <Tabs defaultValue="outline" className="w-full flex-col justify-start gap-6">
         <div className="flex items-center justify-between">
-          <Label htmlFor="view-selector" className="sr-only">
-            View
-          </Label>
+          <Label htmlFor="view-selector" className="sr-only">View</Label>
           <div className="flex items-center gap-2">
-            {/* Pasa los empleados existentes al modal */}
             <AddEmployeeModal 
               onSubmit={handleAddEmployee}
-              existingEmployees={data} // ← Esto es importante
+              existingEmployees={employees}
             >
               <Button variant="outline" size="sm">
                 <Plus />
@@ -62,7 +51,12 @@ export function DataTable({ data: initialData }: { data: Employee[] }) {
         </div>
         <TabsContent value="outline" className="relative flex flex-col gap-4 overflow-auto">
           <div className="overflow-hidden rounded-lg border">
-            <DataTableNew dndEnabled table={table} columns={columns} onReorder={setData} />
+            <DataTableNew 
+              dndEnabled 
+              table={table} 
+              columns={columns} 
+              onReorder={() => {}} 
+            />
           </div>
           <DataTablePagination table={table} />
         </TabsContent>

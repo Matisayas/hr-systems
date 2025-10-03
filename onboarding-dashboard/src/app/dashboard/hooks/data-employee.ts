@@ -2,7 +2,7 @@ export type Department = "HR" | "Engineering" | "Sales" | "Operations";
 export type Country = "El Salvador" | "Guatemala" | "Honduras" | "Costa Rica" | "Panamá";
 
 export interface Employee {
-  id: number;
+  id?: number;
   name: string;
   surname: string;
   emailCorporative: string;
