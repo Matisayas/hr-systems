@@ -3,27 +3,15 @@
 import * as React from "react";
 import { useRouter, useParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { Employee } from "../../components/schema";
+import { employees } from "../../hooks/data-employee";
 import { AddEditEmployeeModal } from "../../components/modals/edit-employee";
-
-// Simulación de datos
-const employees: Employee[] = [
-  {
-    id: 1,
-    name: "Juan",
-    surname: "Pérez",
-    emailCorporative: "juan@empresa.com",
-    departament: "Engineering",
-    dateOfAdmission: "2025-10-02",
-    salary: 2000,
-    country: "El Salvador",
-  },
-];
 
 export default function EmployeeDetailPage() {
   const router = useRouter();
   const params = useParams<{ id: string }>();
   const employeeId = Number(params.id);
+  
+  // Usa los datos reales en lugar de los simulados
   const employee = employees.find((e) => e.id === employeeId) || null;
 
   const [isEditOpen, setIsEditOpen] = React.useState(false);
@@ -32,7 +20,7 @@ export default function EmployeeDetailPage() {
     return (
       <div className="p-4 text-center">
         <p>Empleado no encontrado</p>
-        <Button onClick={() => router.push("/dashboard/employees")}>Volver a lista</Button>
+        <Button onClick={() => router.push("/dashboard")}>Volver a lista</Button>
       </div>
     );
   }
@@ -65,7 +53,6 @@ export default function EmployeeDetailPage() {
           onOpenChange={setIsEditOpen}
           employeeData={employee}
           onSubmit={(data) => {
-            console.log("Empleado editado:", data);
             setIsEditOpen(false);
           }}
         />

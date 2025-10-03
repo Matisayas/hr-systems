@@ -25,6 +25,8 @@ export const departments = [
 interface EmployeeFormProps {
   isSubmitting?: boolean;
   onSubmit: (data: Employee) => void;
+  existingEmployees?: Employee[]; // Nueva prop para validación
+
 }
 
 export function EmployeeForm({ isSubmitting = false, onSubmit }: EmployeeFormProps) {
