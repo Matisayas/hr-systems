@@ -3,7 +3,7 @@
 import * as React from "react";
 import { useRouter, useParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { employees } from "../../hooks/data-employee";
+import { useEmployees } from "@/contexts/employee-context";
 import { AddEditEmployeeModal } from "../../components/modals/edit-employee";
 
 export default function EmployeeDetailPage() {
@@ -11,10 +11,19 @@ export default function EmployeeDetailPage() {
   const params = useParams<{ id: string }>();
   const employeeId = Number(params.id);
   
-  // Usa los datos reales en lugar de los simulados
+  const { employees, updateEmployee } = useEmployees();
+  
+  // Busca el empleado en los datos del contexto
   const employee = employees.find((e) => e.id === employeeId) || null;
 
   const [isEditOpen, setIsEditOpen] = React.useState(false);
+
+  const handleEditSubmit = (data: any) => {
+    if (employee && employee.id) { // ← Verificamos que tenga id
+      updateEmployee(employee.id, { ...data, id: employee.id });
+      setIsEditOpen(false);
+    }
+  };
 
   if (!employee) {
     return (
@@ -47,16 +56,12 @@ export default function EmployeeDetailPage() {
       </div>
 
       {/* Modal de edición */}
-      {isEditOpen && (
-        <AddEditEmployeeModal
-          open={isEditOpen}
-          onOpenChange={setIsEditOpen}
-          employeeData={employee}
-          onSubmit={(data) => {
-            setIsEditOpen(false);
-          }}
-        />
-      )}
+      <AddEditEmployeeModal
+        open={isEditOpen}
+        onOpenChange={setIsEditOpen}
+        employeeData={employee}
+        onSubmit={handleEditSubmit}
+      />
     </div>
   );
 }
