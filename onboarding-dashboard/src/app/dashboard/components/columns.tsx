@@ -5,11 +5,10 @@ import { EllipsisVertical, Info } from "lucide-react";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { useRouter } from "next/navigation";
 import { employeeSchema } from "./schema";
 import { Badge } from "@/components/ui/badge";
 import { DataTableColumnHeader } from "@/components/data-table/data-column-header";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/data-table/dropdown-menu";
+import { ActionsCell } from "@/components/ui/action-cells";
 
 export const dashboardColumns: ColumnDef<z.infer<typeof employeeSchema>>[] = [
   {
@@ -36,7 +35,7 @@ export const dashboardColumns: ColumnDef<z.infer<typeof employeeSchema>>[] = [
       </div>
     ),
     enableSorting: false,
-    enableHiding: false, // no ocultable
+    enableHiding: false,
   },
   {
     accessorKey: "name",
@@ -49,7 +48,7 @@ export const dashboardColumns: ColumnDef<z.infer<typeof employeeSchema>>[] = [
       </div>
     ),
     enableSorting: false,
-    enableHiding: true, // ahora sí aparece en toggle
+    enableHiding: true,
   },
   {
     accessorKey: "surname",
@@ -99,30 +98,7 @@ export const dashboardColumns: ColumnDef<z.infer<typeof employeeSchema>>[] = [
   },
   {
     id: "actions",
-    cell: ({ row }) => {
-      const employee = row.original;
-      const router = useRouter();
-
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon">
-              <EllipsisVertical />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem
-              onClick={() => router.push(`/dashboard/employees/${employee.id}?edit=true`)}
-              className="flex items-center gap-2"
-            >
-              <Info size={16} />
-              Info
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
-    },
+    cell: ({ row }) => <ActionsCell employee={row.original} />,
     enableSorting: false,
-    enableHiding: false, // no ocultable
   }
 ];

@@ -4,7 +4,6 @@ import { Plus } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
-import { useDataTableInstance } from "@/hooks/use-data-table-instance";
 import { DataTable as DataTableNew } from "@/components/data-table/data-table";
 import { DataTablePagination } from "@/components/data-table/data-table-pagination";
 import { withDndColumn } from "@/components/data-table/table-utils";
@@ -12,8 +11,7 @@ import { dashboardColumns } from "./columns";
 import { Employee, employeeSchema } from "./schema";
 import { AddEmployeeModal } from "./modals/create-employee";
 import { ToastContainer } from "react-toastify";
-
-
+import { useDataTableInstance } from "@/hooks/use-data-table-instance";
 
 export function DataTable({ data: initialData }: { data: Employee[] }) {
   const [data, setData] = React.useState<Employee[]>(() => initialData);
@@ -50,7 +48,11 @@ export function DataTable({ data: initialData }: { data: Employee[] }) {
             View
           </Label>
           <div className="flex items-center gap-2">
-            <AddEmployeeModal onSubmit={handleAddEmployee}>
+            {/* Pasa los empleados existentes al modal */}
+            <AddEmployeeModal 
+              onSubmit={handleAddEmployee}
+              existingEmployees={data} // ← Esto es importante
+            >
               <Button variant="outline" size="sm">
                 <Plus />
                 <span className="hidden lg:inline">Agregar Empleado</span>

@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
 import { getPreference } from "@/server/server-actions";
@@ -9,14 +10,23 @@ import {
   type SidebarVariant,
   type NavbarStyle,
 } from "@/types/layout";
-import { AppSidebar } from "./components/sidebar/app-sidebar";
 import { GlobalSearchDialog } from "./components/sidebar/search-dialog";
 import { LayoutControls } from "./components/sidebar/layout-controls";
 import { ThemeSwitcher } from "./components/sidebar/theme-switcher";
-import { AccountSwitcher } from "./components/sidebar/account-switcher";
-import { users } from "@/data/users";
+import { AuthLogout } from "./components/auth-logout";
+import { AppSidebar } from "./components/sidebar/app-sidebar";
 
+// Componente de servidor para verificar autenticación
+async function AuthCheck({ children }: { children: ReactNode }) {
+  const cookieStore = await cookies();
+  const token = cookieStore.get('auth-token')?.value;
 
+  if (!token) {
+    redirect('/auth/login');
+  }
+
+  return <>{children}</>;
+}
 
 export default async function Layout({ children }: Readonly<{ children: ReactNode }>) {
   const cookieStore = await cookies();
@@ -29,42 +39,42 @@ export default async function Layout({ children }: Readonly<{ children: ReactNod
 
   const layoutPreferences = {
     variant: sidebarVariant,
-    navbarStyle:  navbarStyle ?? "sticky",
+    navbarStyle: navbarStyle ?? "sticky",
   };
 
   return (
-     <SidebarProvider defaultOpen={defaultOpen}>
-      <AppSidebar variant={sidebarVariant} />
-      <SidebarInset
-        className={cn(
-          "data-[content-layout=centered]:!mx-auto data-[content-layout=centered]:max-w-screen-2xl",
-          // Adds right margin for inset sidebar in centered layout up to 113rem.
-          // On wider screens with collapsed sidebar, removes margin and sets margin auto for alignment.
-          "max-[113rem]:peer-data-[variant=inset]:!mr-2 min-[101rem]:peer-data-[variant=inset]:peer-data-[state=collapsed]:!mr-auto",
-        )}
-      >
-        <header
-          data-navbar-style={navbarStyle}
+    <AuthCheck>
+      <SidebarProvider defaultOpen={defaultOpen}>
+        <AppSidebar variant={sidebarVariant} />
+        <SidebarInset
           className={cn(
-            "flex h-12 shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12",
-            // Handle sticky navbar style with conditional classes so blur, background, z-index, and rounded corners remain consistent across all SidebarVariant layouts.
-            "data-[navbar-style=sticky]:bg-background/50 data-[navbar-style=sticky]:sticky data-[navbar-style=sticky]:top-0 data-[navbar-style=sticky]:z-50 data-[navbar-style=sticky]:overflow-hidden data-[navbar-style=sticky]:rounded-t-[inherit] data-[navbar-style=sticky]:backdrop-blur-md",
+            "data-[content-layout=centered]:!mx-auto data-[content-layout=centered]:max-w-screen-2xl",
+            "max-[113rem]:peer-data-[variant=inset]:!mr-2 min-[101rem]:peer-data-[variant=inset]:peer-data-[state=collapsed]:!mr-auto",
           )}
         >
-          <div className="flex w-full items-center justify-between px-4 lg:px-6">
-            <div className="flex items-center gap-1 lg:gap-2">
-              <SidebarTrigger className="-ml-1" />
-              <GlobalSearchDialog />
+          <header
+            data-navbar-style={navbarStyle}
+            className={cn(
+              "flex h-12 shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12",
+              "data-[navbar-style=sticky]:bg-background/50 data-[navbar-style=sticky]:sticky data-[navbar-style=sticky]:top-0 data-[navbar-style=sticky]:z-50 data-[navbar-style=sticky]:overflow-hidden data-[navbar-style=sticky]:rounded-t-[inherit] data-[navbar-style=sticky]:backdrop-blur-md",
+            )}
+          >
+            <div className="flex w-full items-center justify-between px-4 lg:px-6">
+              <div className="flex items-center gap-1 lg:gap-2">
+                <SidebarTrigger className="-ml-1" />
+                <GlobalSearchDialog />
+              </div>
+              <div className="flex items-center gap-2">
+                <LayoutControls {...layoutPreferences} />
+                <ThemeSwitcher />
+                {/* Reemplazamos AccountSwitcher con AuthLogout */}
+                <AuthLogout />
+              </div>
             </div>
-            <div className="flex items-center gap-2">
-              <LayoutControls {...layoutPreferences} />
-              <ThemeSwitcher />
-              <AccountSwitcher users={users} />
-            </div>
-          </div>
-        </header>
-        <div className="h-full p-4 md:p-6">{children}</div>
-      </SidebarInset>
-    </SidebarProvider>
+          </header>
+          <div className="h-full p-4 md:p-6">{children}</div>
+        </SidebarInset>
+      </SidebarProvider>
+    </AuthCheck>
   );
 }

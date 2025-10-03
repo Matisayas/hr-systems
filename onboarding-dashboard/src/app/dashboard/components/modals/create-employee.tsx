@@ -13,30 +13,35 @@ import { Employee, employeeSchema } from "../schema";
 import { EmployeeForm } from "../form/employee-form";
 import { toast } from "sonner";
 
-// Mock functions
-let employeesMock: Employee[] = [];
+// Importa o pasa los empleados existentes como prop
+type Props = {
+  onSubmit: (employee: Employee) => void;
+  children: React.ReactNode;
+  existingEmployees?: Employee[]; // Nueva prop para los empleados existentes
+};
 
-async function checkEmailExists(email: string): Promise<boolean> {
+// Función para verificar si el email ya existe
+async function checkEmailExists(email: string, existingEmployees: Employee[]): Promise<boolean> {
   return new Promise((resolve) => {
     setTimeout(() => {
-      resolve(employeesMock.some((e) => e.emailCorporative === email));
-    }, 500);
+      // Verifica contra la lista real de empleados
+      const emailExists = existingEmployees.some((e) => 
+        e.emailCorporative.toLowerCase() === email.toLowerCase()
+      );
+      resolve(emailExists);
+    }, 100);
   });
 }
 
+// Función mock para agregar empleado (solo para simulación)
 async function addEmployee(employee: Employee): Promise<Employee> {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     setTimeout(() => {
-      try {
-        const newEmp = { 
-          ...employee, 
-          id: Date.now() 
-        };
-        employeesMock.push(newEmp);
-        resolve(newEmp);
-      } catch (error) {
-        reject(error);
-      }
+      const newEmp = { 
+        ...employee, 
+        id: Date.now() 
+      };
+      resolve(newEmp);
     }, 800);
   });
 }
@@ -51,12 +56,7 @@ const defaultValues: Partial<Employee> = {
   country: "El Salvador",
 };
 
-type Props = {
-  onSubmit: (employee: Employee) => void;
-  children: React.ReactNode;
-};
-
-export function AddEmployeeModal({ onSubmit, children }: Props) {
+export function AddEmployeeModal({ onSubmit, children, existingEmployees = [] }: Props) {
   const [isOpen, setIsOpen] = React.useState(false);
   const [isSubmitting, setIsSubmitting] = React.useState(false);
 
@@ -100,23 +100,27 @@ export function AddEmployeeModal({ onSubmit, children }: Props) {
     setIsSubmitting(true);
     
     try {
-      const emailExists = await checkEmailExists(values.emailCorporative);
+      // Verificar contra los empleados existentes
+      const emailExists = await checkEmailExists(values.emailCorporative, existingEmployees);
       if (emailExists) {
-        toast.error("El email ya está registrado");
+        toast.error("El email ya está registrado en el sistema");
         setIsSubmitting(false);
         return;
       }
 
+      // Simular la creación del empleado
       const newEmployee = await addEmployee(values);
       
       toast.success("Empleado creado con éxito");
       
       await new Promise(resolve => setTimeout(resolve, 1000));
       
+      // Limpiar y cerrar
       localStorage.removeItem("employeeDraft");
       form.reset(defaultValues);
       setIsOpen(false);
       
+      // Llamar al callback del padre
       onSubmit(newEmployee);
       
     } catch (error) {
