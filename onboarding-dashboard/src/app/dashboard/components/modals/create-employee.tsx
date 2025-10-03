@@ -1,159 +1,156 @@
 "use client";
-
 import * as React from "react";
-import { useForm, Controller } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  DialogFooter,
 } from "@/components/ui/dialog";
-import Select from "react-select";
-import countryList from "react-select-country-list";
-import { employeeSchema } from "../schema";
+import { Employee, employeeSchema } from "../schema";
+import { EmployeeForm } from "../form/employee-form";
+import { toast } from "sonner";
 
+// Mock functions
+let employeesMock: Employee[] = [];
 
-type EmployeeFormData = z.infer<typeof employeeSchema>;
-type CountryOption = { value: string; label: string };
-
-interface AddEmployeeModalProps {
-  onSubmit: (data: EmployeeFormData) => void;
-  children?: React.ReactNode;
+async function checkEmailExists(email: string): Promise<boolean> {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(employeesMock.some((e) => e.emailCorporative === email));
+    }, 500);
+  });
 }
 
-export function AddEmployeeModal({ onSubmit, children }: AddEmployeeModalProps) {
-  const form = useForm<EmployeeFormData>({
+async function addEmployee(employee: Employee): Promise<Employee> {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      try {
+        const newEmp = { 
+          ...employee, 
+          id: Date.now() 
+        };
+        employeesMock.push(newEmp);
+        resolve(newEmp);
+      } catch (error) {
+        reject(error);
+      }
+    }, 800);
+  });
+}
+
+const defaultValues: Partial<Employee> = {
+  name: "",
+  surname: "",
+  emailCorporative: "",
+  departament: "HR",
+  dateOfAdmission: "",
+  salary: 800,
+  country: "El Salvador",
+};
+
+type Props = {
+  onSubmit: (employee: Employee) => void;
+  children: React.ReactNode;
+};
+
+export function AddEmployeeModal({ onSubmit, children }: Props) {
+  const [isOpen, setIsOpen] = React.useState(false);
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
+
+  const form = useForm<Employee>({
     resolver: zodResolver(employeeSchema),
-    defaultValues: {
-      name: "",
-      surname: "",
-      emailCorporative: "",
-      dateOfAdmission: "",
-      departament: "",
-      salary: 800,
-      country: "",
-    },
+    defaultValues,
+    mode: "onChange",
   });
 
-  const countries: CountryOption[] = React.useMemo(() => countryList().getData(), []);
+  const { isDirty } = form.formState;
 
-  const submitHandler = (values: EmployeeFormData) => {
-    onSubmit(values);
-    form.reset();
+  // Recuperar draft al abrir el modal
+  React.useEffect(() => {
+    if (isOpen) {
+      const draft = localStorage.getItem("employeeDraft");
+      if (draft) {
+        try {
+          const parsedDraft = JSON.parse(draft);
+          form.reset(parsedDraft);
+        } catch (error) {
+          console.error("Error parsing draft:", error);
+          localStorage.removeItem("employeeDraft");
+        }
+      }
+    }
+  }, [isOpen, form]);
+
+  // Guardar draft cada 30s
+  React.useEffect(() => {
+    if (!isDirty) return;
+
+    const interval = setInterval(() => {
+      const values = form.getValues();
+      localStorage.setItem("employeeDraft", JSON.stringify(values));
+    }, 30000);
+
+    return () => clearInterval(interval);
+  }, [form, isDirty]);
+
+  const handleFormSubmit = async (values: Employee) => {
+    setIsSubmitting(true);
+    
+    try {
+      const emailExists = await checkEmailExists(values.emailCorporative);
+      if (emailExists) {
+        toast.error("El email ya está registrado");
+        setIsSubmitting(false);
+        return;
+      }
+
+      const newEmployee = await addEmployee(values);
+      
+      toast.success("Empleado creado con éxito");
+      
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      localStorage.removeItem("employeeDraft");
+      form.reset(defaultValues);
+      setIsOpen(false);
+      
+      onSubmit(newEmployee);
+      
+    } catch (error) {
+      console.error("Error:", error);
+      toast.error("Error al crear el empleado");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleOpenChange = (open: boolean) => {
+    setIsOpen(open);
+    if (!open) {
+      form.reset(defaultValues);
+    }
   };
 
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        {children ?? <Button variant="outline">Agregar Empleado</Button>}
-      </DialogTrigger>
-
-      <DialogContent className="sm:max-w-lg w-full">
+    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
+      <DialogTrigger asChild>{children}</DialogTrigger>
+      <DialogContent className="sm:max-w-lg w-full" aria-describedby="dialog-description">
         <DialogHeader>
-          <DialogTitle className="text-xl font-semibold">Agregar Empleado</DialogTitle>
+          <DialogTitle>Agregar Empleado</DialogTitle>
+          <p id="dialog-description" className="sr-only">
+            Formulario para agregar un nuevo empleado al sistema
+          </p>
         </DialogHeader>
-
-        <form onSubmit={form.handleSubmit(submitHandler)} className="grid gap-4 py-4">
-          {/* Nombre y Apellido */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <Label>Nombre</Label>
-              <Input placeholder="Juan" {...form.register("name")} />
-              {form.formState.errors.name && (
-                <p className="text-red-500 text-sm mt-1">{form.formState.errors.name.message}</p>
-              )}
-            </div>
-            <div>
-              <Label>Apellido</Label>
-              <Input placeholder="Pérez" {...form.register("surname")} />
-              {form.formState.errors.surname && (
-                <p className="text-red-500 text-sm mt-1">{form.formState.errors.surname.message}</p>
-              )}
-            </div>
-          </div>
-
-          {/* Email */}
-          <div>
-            <Label>Email corporativo</Label>
-            <Input
-              type="email"
-              placeholder="nombre@empresa.com"
-              {...form.register("emailCorporative")}
-            />
-            {form.formState.errors.emailCorporative && (
-              <p className="text-red-500 text-sm mt-1">
-                {form.formState.errors.emailCorporative.message}
-              </p>
-            )}
-          </div>
-          
-          <div>
-            <Label>Departamento</Label>
-            <Input placeholder="Marketing" {...form.register("departament")} />
-            {form.formState.errors.departament && (
-              <p className="text-red-500 text-sm mt-1">
-                {form.formState.errors.departament.message}
-              </p>
-            )}
-          </div>
-
-
-          {/* Fecha de ingreso y Salario */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <Label>Fecha de ingreso</Label>
-              <Input type="date" {...form.register("dateOfAdmission")} />
-              {form.formState.errors.dateOfAdmission && (
-                <p className="text-red-500 text-sm mt-1">
-                  {form.formState.errors.dateOfAdmission.message}
-                </p>
-              )}
-            </div>
-            <div>
-              <Label>Salario</Label>
-              <Input type="number" step="100" min="800" max="10000" {...form.register("salary")} />
-              {form.formState.errors.salary && (
-                <p className="text-red-500 text-sm mt-1">{form.formState.errors.salary.message}</p>
-              )}
-            </div>
-          </div>
-
-          {/* País con react-select */}
-          <div>
-            <Label>País</Label>
-            <Controller
-              control={form.control}
-              name="country"
-              render={({ field }) => (
-                <Select
-                  {...field}
-                  options={countries}
-                  placeholder="Escribe para buscar..."
-                  onChange={(val: CountryOption | null) => field.onChange(val?.value)}
-                  value={countries.find((c: CountryOption) => c.value === field.value) || null}
-                  isClearable
-                />
-              )}
-            />
-            {form.formState.errors.country && (
-              <p className="text-red-500 text-sm mt-1">{form.formState.errors.country.message}</p>
-            )}
-          </div>
-
-          <DialogFooter className="pt-2">
-            <Button type="submit" className="w-full sm:w-auto">
-              Guardar
-            </Button>
-          </DialogFooter>
-        </form>
+        
+        <FormProvider {...form}>
+          <EmployeeForm 
+            isSubmitting={isSubmitting}
+            onSubmit={handleFormSubmit}
+          />
+        </FormProvider>
       </DialogContent>
     </Dialog>
   );
