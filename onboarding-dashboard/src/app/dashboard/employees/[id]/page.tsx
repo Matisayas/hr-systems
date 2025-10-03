@@ -67,7 +67,6 @@ export default function EmployeeDetailPage() {
           onSubmit={(data) => {
             console.log("Empleado editado:", data);
             setIsEditOpen(false);
-            // 🔥 Aquí podés actualizar la lista o llamar a tu API
           }}
         />
       )}
