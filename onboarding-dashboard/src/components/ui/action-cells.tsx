@@ -3,8 +3,8 @@
 import { useRouter } from "next/navigation";
 import { EllipsisVertical, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/data-table/dropdown-menu";
-import { Employee } from "@/app/dashboard/components/schema";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Employee } from "@/app/employees/components/schema";
 
 interface ActionsCellProps {
   employee: Employee;
@@ -15,7 +15,7 @@ export function ActionsCell({ employee }: ActionsCellProps) {
 
   const handleViewDetails = () => {
     // Redirige a la página de detalle del empleado
-    router.push(`/dashboard/employees/${employee.id}`);
+    router.push(`/employees/edit/${employee.id}`);
   };
 
   return (

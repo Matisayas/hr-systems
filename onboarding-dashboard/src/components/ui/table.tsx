@@ -1,7 +1,6 @@
 "use client"
 
 import * as React from "react"
-
 import { cn } from "@/lib/utils"
 
 function Table({ className, ...props }: React.ComponentProps<"table">) {
@@ -91,14 +90,17 @@ function TableCell({ className, ...props }: React.ComponentProps<"td">) {
   )
 }
 
-function TableCaption({
+// 👉 Nuevo: cuerpo especial para virtualización
+function VirtualTableBody({
   className,
+  style,
   ...props
-}: React.ComponentProps<"caption">) {
+}: React.ComponentProps<"div">) {
   return (
-    <caption
-      data-slot="table-caption"
-      className={cn("text-muted-foreground mt-4 text-sm", className)}
+    <div
+      data-slot="virtual-table-body"
+      className={cn("relative w-full", className)}
+      style={style}
       {...props}
     />
   )
@@ -112,5 +114,5 @@ export {
   TableHead,
   TableRow,
   TableCell,
-  TableCaption,
+  VirtualTableBody,
 }
