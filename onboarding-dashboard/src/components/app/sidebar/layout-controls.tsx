@@ -13,6 +13,7 @@ import { type ThemePreset, type ThemeMode } from "@/types/theme";
 import { usePreferencesStore } from "@/store/preferences/preferences-provider";
 import { NavbarStyle, SidebarVariant } from "@/types/layout";
 
+
 type LayoutControlsProps = {
   readonly variant: SidebarVariant;
   readonly navbarStyle: NavbarStyle;
@@ -90,6 +91,7 @@ export function LayoutControls(props: LayoutControlsProps) {
                 type="single"
                 value={variant}
                 onValueChange={(value) => value && handleValueChange("sidebar_variant", value)}
+
               >
                 <ToggleGroupItem className="text-xs" value="inset" aria-label="Toggle inset">
                   Integrada
@@ -128,3 +130,4 @@ export function LayoutControls(props: LayoutControlsProps) {
     </Popover>
   );
 }
+

@@ -20,6 +20,7 @@ type SidebarContextProps = {
   state: "expanded" | "collapsed"
   open: boolean
   setOpen: (open: boolean) => void
+
   toggleSidebar: () => void
 }
 
@@ -349,6 +350,7 @@ function SidebarMenuButton({
   const Comp = asChild ? SlotPrimitive : "button"
   const { state } = useSidebar()
 
+
   const button = (
     <Comp
       data-slot="sidebar-menu-button"
@@ -377,6 +379,7 @@ function SidebarMenuButton({
         side="right"
         align="center"
         hidden={state !== "collapsed"}
+
         {...tooltip}
       />
     </Tooltip>

@@ -14,6 +14,7 @@ export default function RHFCurrencyField(props: RHFCurrencyFieldProps) {
     required = false,
     disabled = false,
     className = "",
+
     currencySymbol = "$",
   } = props;
 
@@ -41,6 +42,7 @@ export default function RHFCurrencyField(props: RHFCurrencyFieldProps) {
               placeholder={placeholder}
               disabled={disabled}
               value={displayValue || (field.value === 0 ? "0" : field.value?.toString() || "")}
+
               onChange={(e) => {
                 const value = e.target.value;
                 
@@ -66,6 +68,7 @@ export default function RHFCurrencyField(props: RHFCurrencyFieldProps) {
                   setDisplayValue("0");
                 } else {
                   const numValue = Number(displayValue);
+
                   if (isNaN(numValue)) {
                     field.onChange(0);
                     setDisplayValue("0");
@@ -73,6 +76,7 @@ export default function RHFCurrencyField(props: RHFCurrencyFieldProps) {
                 }
               }}
               onFocus={() => {
+
                 // Al enfocar, si el valor es 0, limpiar el campo temporalmente
                 if (field.value === 0) {
                   setDisplayValue("");

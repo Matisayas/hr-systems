@@ -3,6 +3,7 @@
 import { createContext, useContext, ReactNode, useEffect, useState, useCallback } from 'react'
 import { rootUser } from '@/data/users'
 
+
 interface User {
   id: string
   name: string
@@ -45,6 +46,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const checkAuth = useCallback(() => {
+
     // Solo ejecutar en el cliente
     if (typeof window === 'undefined') {
       setLoading(false)
@@ -69,7 +71,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (email === 'admin@rebuhr.com' && password === 'password123') {
       const fakeToken = 'fake-jwt-token-' + Date.now()
       setCookie('auth-token', fakeToken, 1)
-      
+
       setUser(rootUser)
       return true
     }
@@ -83,6 +85,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     window.location.href = '/auth/login'
   }
 
+
   const value: AuthContextType = {
     user,
     loading,
@@ -90,6 +93,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     logout,
     isAuthenticated: !!user
   }
+
 
   return (
     <AuthContext.Provider value={value}>
