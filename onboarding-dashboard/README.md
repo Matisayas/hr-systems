@@ -1,36 +1,78 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Employee Onboarding Dashboard
 
-## Getting Started
 
-First, run the development server:
+## Comenzando
+
+Primero, clona el repositorio e instala las dependencias:
 
 ```bash
+git clone <https://github.com/Matisayas/hr-systems.git>
+cd <hr-systems>
+npm install
+
+
+
+## Luego, ejecuta el servidor de desarrollo:
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Abre http://localhost:3000
+en tu navegador para ver la aplicación. La página se actualizará automáticamente al modificar archivos.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Descripción del Proyecto
+El Employee Onboarding Dashboard es una aplicación web diseñada para gestionar la creación y edición de empleados de manera eficiente. Cuenta con una interfaz intuitiva, modos de visualización oscuro/claro y varias funcionalidades que facilitan la gestión de la información de los usuarios.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-## Learn More
+## Decisiones Técnicas
 
-To learn more about Next.js, take a look at the following resources:
+-Se utilizó App Router para la gestión de rutas y redirección de páginas.
+-Se crearon componentes reutilizables a nivel global, utilizados en distintos servicios de la aplicación.
+-Se middleware para rutas protegidas 
+-Se utilizó local storage y cookies para la persistencia de datos y la gestión de sesiones.
+-Se utilizo react hook form en los formularios
+-Se utilizo zod para la validacion de datos
+-Se divido por modulos en el caso de empleados es uno solo con sus paginas, hooks y forms
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Funcionalidades Implementadas
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+-Diseño de UI moderno y responsive
 
-## Deploy on Vercel
+-Sidebar con navegación (actualmente con la ruta "Empleados")
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+-Tabla de empleados con columnas dinámicas y búsqueda global
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+-Botón de cuenta con funcionalidad de cierre de sesión
+
+-Página de creación de empleados
+
+-Página de edición de empleados dentro de un modal
+
+-Gestión de cookies y local storage
+
+-Refactorización de código para mantener buenas prácticas
+
+-Modo oscuro/claro
+
+-Configuración visual del sidebar y opciones personalizadas de UI
+
+##Tiempo Aproximado Invertido
+Se estima que el desarrollo de este proyecto tomó aproximadamente 12 horas.
+
+
+
+## Uso de Inteligencia Artificial
+Se utilizó IA para agilizar la implementación de algunas funcionalidades y la organización del código, manteniendo un control manual sobre la calidad y consistencia del proyecto.
+
+
+## Mejoras Futuras
+Con más tiempo, se podrían implementar mejoras como:
+
+-Optimización de la combinación de colores para mayor contraste y accesibilidad
+
+-Página de visualización detallada de la información del usuario
+
+-Formularios en pasos (steps) para listas largas, evitando scroll extenso
+
+## Credenciales
+email: admin@rebuhr.com
+password: password123
+(Las credenciales de admin se visualizan abajo del login y en el boton del usuario)

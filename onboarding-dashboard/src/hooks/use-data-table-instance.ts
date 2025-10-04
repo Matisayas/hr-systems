@@ -1,10 +1,13 @@
-import * as React from "react";
+"use client";
 
+import * as React from "react";
 import {
   ColumnDef,
   ColumnFiltersState,
   SortingState,
   VisibilityState,
+  RowSelectionState,
+  PaginationState,
   getCoreRowModel,
   getFacetedRowModel,
   getFacetedUniqueValues,
@@ -12,35 +15,50 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
+  Table as TanStackTable,
 } from "@tanstack/react-table";
 
-type UseDataTableInstanceProps<TData, TValue> = {
+/**
+ * Props para inicializar la instancia de la tabla.
+ */
+export type UseDataTableInstanceProps<TData> = {
   data: TData[];
-  columns: ColumnDef<TData, TValue>[];
+  columns: ColumnDef<TData, unknown>[]; // columnas definidas con tanstack
   enableRowSelection?: boolean;
   defaultPageIndex?: number;
   defaultPageSize?: number;
   getRowId?: (row: TData, index: number) => string;
 };
 
-export function useDataTableInstance<TData, TValue>({
+/**
+ * Hook para crear una tabla de datos tipada con @tanstack/react-table.
+ */
+export function useDataTableInstance<TData>({
   data,
   columns,
   enableRowSelection = true,
   defaultPageIndex,
   defaultPageSize,
   getRowId,
-}: UseDataTableInstanceProps<TData, TValue>) {
-  const [rowSelection, setRowSelection] = React.useState({});
-  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
+}: UseDataTableInstanceProps<TData>): TanStackTable<TData> {
+  // Estado de selección de filas
+  const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
+  // Estado de visibilidad de columnas
+  const [columnVisibility, setColumnVisibility] =
+    React.useState<VisibilityState>({});
+  // Estado de filtros
+  const [columnFilters, setColumnFilters] =
+    React.useState<ColumnFiltersState>([]);
+  // Estado de ordenamiento
   const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [pagination, setPagination] = React.useState({
+  // Estado de paginación
+  const [pagination, setPagination] = React.useState<PaginationState>({
     pageIndex: defaultPageIndex ?? 0,
     pageSize: defaultPageSize ?? 10,
   });
 
-  const table = useReactTable({
+  // Instancia tipada de la tabla
+  const table = useReactTable<TData>({
     data,
     columns,
     state: {
@@ -51,7 +69,10 @@ export function useDataTableInstance<TData, TValue>({
       pagination,
     },
     enableRowSelection,
-    getRowId: getRowId ?? ((row) => (row as any).id.toString()),
+    getRowId:
+      getRowId ??
+      ((row, index) =>
+        (row as { id?: string | number })?.id?.toString() ?? String(index)),
     onRowSelectionChange: setRowSelection,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,

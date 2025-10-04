@@ -1,6 +1,6 @@
 "use client";
 import * as React from "react";
-import { Employee } from "@/app/dashboard/hooks/data-employee";
+import { Employee } from "@/app/employees/hooks/data-employee";
 
 interface EmployeeContextType {
   employees: Employee[];

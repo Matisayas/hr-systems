@@ -1,9 +1,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-/* Presets de temas */
-@import "../styles/presets/tangerine.css";
-@import "../styles/presets/soft-pop.css";
+/* Theme preset styles: these override CSS variables based on the selected data-theme-preset */
 
 @custom-variant dark (&:is(.dark *));
 
@@ -39,6 +37,13 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
+  
+  /* Nuevas variables para dropdowns */
+  --color-dropdown-background: var(--dropdown-background);
+  --color-dropdown-foreground: var(--dropdown-foreground);
+  --color-dropdown-hover: var(--dropdown-hover);
+  --color-dropdown-border: var(--dropdown-border);
+  
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -80,6 +85,12 @@ These serve as the fallback; there is no separate default.css file. */
   --sidebar-ring: oklch(0.708 0 0);
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
+  
+  /* Dropdown colors for light mode */
+  --dropdown-background: oklch(1 0 0);
+  --dropdown-foreground: oklch(0.145 0 0);
+  --dropdown-hover: oklch(0.97 0 0);
+  --dropdown-border: oklch(0.922 0 0);
 }
 
 .dark {
@@ -114,6 +125,12 @@ These serve as the fallback; there is no separate default.css file. */
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+  
+  /* Dropdown colors for dark mode */
+  --dropdown-background: oklch(0.205 0 0);
+  --dropdown-foreground: oklch(0.985 0 0);
+  --dropdown-hover: oklch(0.269 0 0);
+  --dropdown-border: oklch(1 0 0 / 15%);
 }
 
 @layer utilities {

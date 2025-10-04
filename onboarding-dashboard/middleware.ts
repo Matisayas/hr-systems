@@ -6,14 +6,14 @@ export function middleware(request: NextRequest) {
   const isLoginPage = request.nextUrl.pathname === '/auth/login'
   const isProtectedRoute = 
     request.nextUrl.pathname.startsWith('/employees') ||
-    request.nextUrl.pathname.startsWith('/dashboard')
+    request.nextUrl.pathname.startsWith('/employees/list')
   
   if (!token && isProtectedRoute) {
     return NextResponse.redirect(new URL('/auth/login', request.url))
   }
   
   if (token && isLoginPage) {
-    return NextResponse.redirect(new URL('/dashboard', request.url))
+    return NextResponse.redirect(new URL('/employees/list', request.url))
   }
   
   return NextResponse.next()
@@ -22,7 +22,7 @@ export function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     '/employees/:path*',
-    '/dashboard/:path*',
+    '/employees/list/:path*',
     '/auth/login'
   ]
 }

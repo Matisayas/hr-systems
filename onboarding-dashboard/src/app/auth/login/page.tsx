@@ -15,7 +15,7 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (isAuthenticated && !authLoading) {
-      router.push('/dashboard')
+      router.push('/employees/list')
     }
   }, [isAuthenticated, authLoading, router])
 
