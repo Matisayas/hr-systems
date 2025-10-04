@@ -2,7 +2,7 @@
 import * as React from "react";
 import { Plus, X } from "lucide-react";
 import { useState, useMemo } from "react";
-import { useRouter } from "next/navigation"; // <--- App Router
+import { useRouter } from "next/navigation"; 
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
@@ -13,14 +13,13 @@ import { useEmployees } from "@/contexts/employee-context";
 import { MultiSelectFilter } from "./multi-select-filter";
 import { Badge } from "@/components/ui/badge";
 import { Country, Department } from "@/app/employees/hooks/data-employee";
-import { Employee } from "@/app/employees/components/schema";
-import { ColumnDef, flexRender, type Table as TanStackTable } from "@tanstack/react-table";
+import {  flexRender } from "@tanstack/react-table";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { dashboardColumns } from "../app/columns/columns";
 
 export function EmployeeTable() {
-  const router = useRouter(); // <--- App Router
-  const { employees, addEmployee } = useEmployees();
+  const router = useRouter(); 
+  const { employees } = useEmployees();
 
   const [departmentFilter, setDepartmentFilter] = useState<Department[]>([]);
   const [countryFilter, setCountryFilter] = useState<Country[]>([]);

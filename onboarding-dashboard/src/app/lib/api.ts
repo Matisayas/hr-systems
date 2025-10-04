@@ -1,7 +1,7 @@
 import { Employee } from "../employees/components/schema";
 
 // Lista mock (esto simula la "base de datos")
-let employees: Employee[] = [];
+const employees: Employee[] = [];
 
 // Simular delay
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));

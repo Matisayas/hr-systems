@@ -12,8 +12,7 @@ export interface Employee {
   dateOfAdmission: string;
 }
 
-// Tipo para formularios (sin id opcional)
-export interface EmployeeFormData extends Omit<Employee, "id"> {}
+export type EmployeeFormData = Omit<Employee, "id">; 
 
 // Tipo para actualizar empleado (id requerido)
 export interface UpdateEmployee extends Omit<Employee, "id"> {
