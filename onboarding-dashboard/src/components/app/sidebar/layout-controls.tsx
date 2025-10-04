@@ -1,7 +1,6 @@
 "use client";
 
 import { Settings } from "lucide-react";
-
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -9,7 +8,7 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle/toggle-grou
 import { updateNavbarStyle } from "@/lib/layout-utils";
 import { updateThemeMode, updateThemePreset } from "@/lib/theme-utils";
 import { setValueToCookie } from "@/server/server-actions";
-import { type ThemePreset, type ThemeMode } from "@/types/theme";
+import { type ThemePreset } from "@/types/theme";
 import { usePreferencesStore } from "@/store/preferences/preferences-provider";
 import { NavbarStyle, SidebarVariant } from "@/types/layout";
 

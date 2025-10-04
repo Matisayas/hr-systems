@@ -1,3 +1,4 @@
+"use client";
 import { EmployeeTable } from "@/components/data-table/employee-table";
 
 export default function Page() {

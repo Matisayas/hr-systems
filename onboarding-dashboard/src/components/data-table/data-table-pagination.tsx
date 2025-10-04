@@ -1,3 +1,4 @@
+"use client";
 import { Table } from "@tanstack/react-table";
 import { ChevronRight, ChevronsRight, ChevronLeft, ChevronsLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";

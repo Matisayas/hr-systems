@@ -1,7 +1,6 @@
 import { ReactNode } from "react";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-
 import { Toaster } from "@/components/ui/sonner";
 import { getPreference } from "@/server/server-actions";
 import { PreferencesStoreProvider } from "@/store/preferences/preferences-provider";
