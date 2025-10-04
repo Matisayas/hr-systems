@@ -4,7 +4,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Controller, useFormContext } from "react-hook-form";
 import { useEffect, useState } from "react";
-import { Employee } from "@/app/employees/components/schema";
 import { RHFEmailFieldProps } from "./types";
 
 export default function RHFEmailField(props: RHFEmailFieldProps) {

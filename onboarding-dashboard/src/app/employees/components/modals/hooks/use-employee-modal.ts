@@ -22,7 +22,6 @@ interface UseEmployeeModalReturn {
 export function useEmployeeModal({
   employeeData,
   onSubmit,
-  existingEmployees = [],
 }: UseEmployeeModalProps): UseEmployeeModalReturn {
   const methods = useForm<EmployeeFormData>({
     resolver: zodResolver(employeeSchema.omit({ id: true })),

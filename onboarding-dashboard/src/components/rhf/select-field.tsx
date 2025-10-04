@@ -4,7 +4,6 @@ import { Label } from "@/components/ui/label";
 import { Controller, useFormContext } from "react-hook-form";
 import Select from "react-select";
 import { RHFSelectFieldProps } from "./types";
-import { useState, useEffect } from "react";
 import { THEME_PRESET_OPTIONS } from "@/types/theme";
 
 // Hook para obtener colores del dropdown según theme y modo

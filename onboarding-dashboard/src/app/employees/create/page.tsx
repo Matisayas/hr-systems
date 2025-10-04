@@ -78,7 +78,7 @@ export default function CreateEmployeePage() {
       try {
         const parsedDraft = JSON.parse(draft);
         form.reset(parsedDraft);
-      } catch (error) {
+      } catch {
         localStorage.removeItem("employeeDraft");
       }
     }
@@ -128,8 +128,7 @@ useEffect(() => {
       // Redirigir a la lista
       router.push("/employees");
       
-    } catch (error) {
-      console.error("Error:", error);
+    } catch {
       toast.error("Error al crear el empleado");
     } finally {
       setIsSubmitting(false);

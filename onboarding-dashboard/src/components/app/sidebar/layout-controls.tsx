@@ -5,14 +5,13 @@ import { Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle/toggle-group";
-import { updateContentLayout, updateNavbarStyle } from "@/lib/layout-utils";
+import { updateNavbarStyle } from "@/lib/layout-utils";
 import { updateThemeMode, updateThemePreset } from "@/lib/theme-utils";
 import { setValueToCookie } from "@/server/server-actions";
-import { THEME_PRESET_OPTIONS, type ThemePreset, type ThemeMode } from "@/types/theme";
+import { type ThemePreset, type ThemeMode } from "@/types/theme";
 import { usePreferencesStore } from "@/store/preferences/preferences-provider";
-import {  NavbarStyle, SidebarVariant } from "@/types/layout";
+import { NavbarStyle, SidebarVariant } from "@/types/layout";
 
 type LayoutControlsProps = {
   readonly variant: SidebarVariant;
@@ -24,23 +23,27 @@ export function LayoutControls(props: LayoutControlsProps) {
 
   const themeMode = usePreferencesStore((s) => s.themeMode);
   const setThemeMode = usePreferencesStore((s) => s.setThemeMode);
-  const themePreset = usePreferencesStore((s) => s.themePreset);
   const setThemePreset = usePreferencesStore((s) => s.setThemePreset);
 
-  const handleValueChange = async (key: string, value: any) => {
-    if (key === "theme_mode") {
-      updateThemeMode(value);
-      setThemeMode(value as ThemeMode);
+  const handleValueChange = async (key: string, value: string) => {
+    if (key === "theme_mode" && (value === "light" || value === "dark")) {
+      updateThemeMode(value); // value es ahora "light" | "dark"
+      setThemeMode(value);
     }
 
     if (key === "theme_preset") {
-      updateThemePreset(value);
+      updateThemePreset(value as ThemePreset);
       setThemePreset(value as ThemePreset);
     }
 
-    if (key === "navbar_style") {
-      updateNavbarStyle(value);
+    if (key === "navbar_style" && (value === "sticky" || value === "scroll")) {
+      updateNavbarStyle(value); // value es ahora "sticky" | "scroll"
     }
+
+    if (key === "sidebar_variant" && (value === "inset" || value === "sidebar" || value === "floating")) {
+      // value es ahora SidebarVariant
+    }
+
     await setValueToCookie(key, value);
   };
 
@@ -67,7 +70,7 @@ export function LayoutControls(props: LayoutControlsProps) {
                 variant="outline"
                 type="single"
                 value={themeMode}
-                onValueChange={(value) => handleValueChange("theme_mode", value)}
+                onValueChange={(value) => value && handleValueChange("theme_mode", value)}
               >
                 <ToggleGroupItem className="text-xs" value="light" aria-label="Toggle inset">
                   Claro
@@ -86,7 +89,7 @@ export function LayoutControls(props: LayoutControlsProps) {
                 variant="outline"
                 type="single"
                 value={variant}
-                onValueChange={(value) => handleValueChange("sidebar_variant", value)}
+                onValueChange={(value) => value && handleValueChange("sidebar_variant", value)}
               >
                 <ToggleGroupItem className="text-xs" value="inset" aria-label="Toggle inset">
                   Integrada
@@ -108,7 +111,7 @@ export function LayoutControls(props: LayoutControlsProps) {
                 variant="outline"
                 type="single"
                 value={navbarStyle}
-                onValueChange={(value) => handleValueChange("navbar_style", value)}
+                onValueChange={(value) => value && handleValueChange("navbar_style", value)}
               >
                 <ToggleGroupItem className="text-xs" value="sticky" aria-label="Toggle sticky">
                   Desplazable

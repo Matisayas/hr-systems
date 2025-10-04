@@ -5,6 +5,7 @@ import { useRouter, useParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { useEmployees } from "@/contexts/employee-context";
 import { AddEditEmployeeModal } from "../../components/modals/edit-employee";
+import { Employee } from "../../components/schema";
 
 export default function EmployeeDetailPage() {
   const router = useRouter();
@@ -18,7 +19,7 @@ export default function EmployeeDetailPage() {
 
   const [isEditOpen, setIsEditOpen] = React.useState(false);
 
-  const handleEditSubmit = (data: any) => {
+  const handleEditSubmit = (data: Employee) => {
     if (employee && employee.id) { // ← Verificamos que tenga id
       updateEmployee(employee.id, { ...data, id: employee.id });
       setIsEditOpen(false);

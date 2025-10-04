@@ -119,7 +119,7 @@ export function GlobalSearchDialog() {
                   {filteredItems.length} resultado{filteredItems.length > 1 ? 's' : ''} encontrado{filteredItems.length > 1 ? 's' : ''}
                 </span>
               ) : (
-                <span>No se encontraron resultados para "{searchQuery}"</span>
+              <span>No se encontraron resultados para &quot;{searchQuery}&quot;</span> 
               )}
             </div>
           )}
